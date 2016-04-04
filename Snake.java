@@ -1,3 +1,5 @@
+import java.awt.Color;
+import java.util. ArrayList;
 
 /**
  * Write a description of class Snake here.
@@ -7,16 +9,22 @@
  */
 public class Snake
 {
-    // instance variables - replace the example below with your own
-    private int x;
+    private int altoLienzo;
+    private int anchoLienzo;
+    private final Color COLOR_SERPIENTE ;
+    private final int NUMERO_SEGMENTOS_INICIALES;
+    private ArrayList<Segment> segmentos;
 
     /**
      * Constructor for objects of class Snake
      */
-    public Snake()
+    public Snake(int altoLienzo , int anchoLienzo)
     {
-        // initialise instance variables
-        x = 0;
+        this.altoLienzo = altoLienzo;
+        this.anchoLienzo = anchoLienzo;
+        NUMERO_SEGMENTOS_INICIALES = 3;
+        segmentos = new ArrayList<>();
+        COLOR_SERPIENTE = Color.BLACK;
     }
 
     /**
@@ -28,6 +36,6 @@ public class Snake
     public int sampleMethod(int y)
     {
         // put your code here
-        return x + y;
+        return  y;
     }
 }

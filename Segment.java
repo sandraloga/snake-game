@@ -60,7 +60,7 @@ public class Segment
     /**
      * Devuelve l posicion final de x
      */
-    public int posicionFinalX()
+    public int getPosicionFinalX()
     {
         if (direccion == 90 || direccion == 180)
         {
@@ -71,7 +71,7 @@ public class Segment
     /**
      * Devuelve la posicion final de y
      */
-    public int posicionFinalY()
+    public int getPosicionFinalY()
     {
         if (direccion == 90 || direccion == 270)
         {
@@ -79,12 +79,13 @@ public class Segment
         }
         return posicionY;
     }
-    /**
+    /**l
      * Devuelve el angulo de direción
      */
     public int getDireccion()
     {
         return direccion;
     }
+    
     
 }
