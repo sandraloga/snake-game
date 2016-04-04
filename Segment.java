@@ -25,7 +25,16 @@ public class Segment
         this.color = color;
     }
 
-    
+    /**
+     * Dibuja un segmento
+     */
+    public void dibujar( Canvas lienzo)
+    {
+        Pen pen = new Pen (posicionX , posicionY , lienzo);
+        pen.setColor(color);
+        pen.turnTo(direccion);
+        pen.move(LONGUITUD_SEGMENTO);
+    }
     /**
      * Borrar lienzo
      */
@@ -77,4 +86,5 @@ public class Segment
     {
         return direccion;
     }
+    
 }
