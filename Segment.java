@@ -62,9 +62,13 @@ public class Segment
      */
     public int getPosicionFinalX()
     {
-        if (direccion == 90 || direccion == 180)
+        if (direccion == 90 )
         {
             posicionX+=LONGUITUD_SEGMENTO;
+        }
+        if (direccion == 180)
+        {
+            posicionX-=LONGUITUD_SEGMENTO;
         }
         return posicionX;
     }
@@ -73,9 +77,13 @@ public class Segment
      */
     public int getPosicionFinalY()
     {
-        if (direccion == 90 || direccion == 270)
+        if (direccion == 90)
         {
             posicionY+=LONGUITUD_SEGMENTO;
+        }
+        if ( direccion == 270)
+        {
+           posicionY-=LONGUITUD_SEGMENTO; 
         }
         return posicionY;
     }
@@ -86,6 +94,20 @@ public class Segment
     {
         return direccion;
     }
-    
+    /**
+     * Comprueba que el segmento no colisione con el margen del lienzo.
+     * En caso que colisione devuelve true
+     */
+    public boolean colisionaCon(Segment segmento)
+    {
+        boolean siColisiona = false;
+        if (getPosicionFinalX() == segmento.getPosicionFinalX() && 
+                getPosicionFinalY() == segmento.getPosicionFinalY())
+                {
+                    siColisiona = true;
+                }
+         return siColisiona;
+                    
+    }
     
 }

@@ -28,14 +28,43 @@ public class Snake
     }
 
     /**
-     * An example of a method - replace this comment with your own
      * 
-     * @param  y   a sample parameter for a method
-     * @return     the sum of x and y 
      */
-    public int sampleMethod(int y)
+    public void dibujar(Canvas lienzo)
     {
-        // put your code here
-        return  y;
+    
+    }
+    /**
+     * 
+     */
+    public void borrar(Canvas lienzo)
+    {
+        lienzo.erase();
+    }
+    /**
+     * 
+     */
+    public void addSegmento()
+    {
+    
+    }
+    /**
+     * 
+     */
+    public boolean colisionaConOtrosSegmentos()
+    {
+      boolean siColisiona = false;  
+      
+      return siColisiona;
+    }
+    /**
+     * 
+     */
+    public boolean colisionaConLosBordes()
+    {
+        boolean siColisiona = false;
+        
+        
+        return siColisiona;
     }
 }
