@@ -9,20 +9,20 @@ public class Segment
 {
     private int posicionX;
     private int posicionY;
-    public final int LONGUITUD_SEGMENTO = 4;
+    public final int LONGUITUD_SEGMENTO = 50;
     private int direccion;
     private Color color;
 
     /**
      * Constructor for objects of class Segment
      */
-    public Segment(int posicionX , int posicionY , int direccion , Color color)
+    public Segment(int posicionX , int posicionY , int direccion)
     {
        
         this.posicionX = posicionX;
         this.posicionY = posicionY;
         this.direccion = direccion;
-        this.color = color;
+        this.color = color.BLACK;
     }
 
     /**
@@ -40,12 +40,15 @@ public class Segment
      */
     public void borrar(Canvas lienzo)
     {
-        lienzo.erase();
+         Pen pen = new Pen (posicionX , posicionY , lienzo);
+        pen.setColor(lienzo.getBackgroundColor());
+        pen.turnTo(direccion);
+        pen.move(LONGUITUD_SEGMENTO);
     }
     /**
      * Devuelve la posicion inicial de x
      */
-    public int getPosicionIcialX()
+    public int getPosicionInicialX()
     {
         return posicionX;
         
@@ -53,7 +56,7 @@ public class Segment
     /**
      * Devuelve la posicion inicial de y
      */
-    public int getPosicionIniciaY()
+    public int getPosicionInicialY()
     {
         return posicionY;
     }
@@ -101,8 +104,8 @@ public class Segment
     public boolean colisionaCon(Segment segmento)
     {
         boolean siColisiona = false;
-        if (getPosicionFinalX() == segmento.getPosicionFinalX() && 
-                getPosicionFinalY() == segmento.getPosicionFinalY())
+        if (getPosicionInicialX() == segmento.getPosicionFinalX() && 
+                getPosicionInicialY() == segmento.getPosicionFinalY())
                 {
                     siColisiona = true;
                 }
