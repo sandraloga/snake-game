@@ -1,5 +1,6 @@
 import java.awt.Color;
-import java.util. ArrayList;
+import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Write a description of class Snake here.
@@ -9,62 +10,174 @@ import java.util. ArrayList;
  */
 public class Snake
 {
-    private int altoLienzo;
     private int anchoLienzo;
-    private final Color COLOR_SERPIENTE ;
-    private final int NUMERO_SEGMENTOS_INICIALES;
-    private ArrayList<Segment> segmentos;
-
-    /**
-     * Constructor for objects of class Snake
+    private int altoLienzo;
+    private static final int NUMERO_SEGMENTOS_INICIALES = 13;
+    private static final Color color = Color.BLACK;
+    private ArrayList<Segment> segmentos;   
+    private static final int DIFERENCIA_DE_GRADOS_ENTRE_DIRECCIONES = 90;
+    private static final int MARGEN_LIENZO = 10;
+    private static final int TAMANO_CABEZA = 8;
+    
+    /*
+     * Constructor de la clase Snake
      */
-    public Snake(int altoLienzo , int anchoLienzo)
+    public Snake(int anchoLienzo, int altoLienzo)
     {
-        this.altoLienzo = altoLienzo;
         this.anchoLienzo = anchoLienzo;
-        NUMERO_SEGMENTOS_INICIALES = 3;
+        this.altoLienzo = altoLienzo;
         segmentos = new ArrayList<>();
-        COLOR_SERPIENTE = Color.BLACK;
+        for (int i = 0; i < NUMERO_SEGMENTOS_INICIALES; i++) {
+            addSegment();
+        }
     }
-
-    /**
-     * 
+    
+    /*
+     * Dibuja la serpiente en el lienzo dado
      */
     public void dibujar(Canvas lienzo)
     {
-    
+        for (Segment segmento : segmentos) {
+            segmento.dibujar(lienzo);
+        }
+        Segment cabeza = segmentos.get(segmentos.size() - 1);
+        lienzo.setForegroundColor(color);
+        lienzo.fillCircle(cabeza.getPosicionFinalX() - (TAMANO_CABEZA / 2),
+                          cabeza.getPosicionFinalY() - (TAMANO_CABEZA / 2),
+                          TAMANO_CABEZA);
     }
-    /**
-     * 
+    
+    /*
+     * Borra la serpiente del lienzo dado
      */
     public void borrar(Canvas lienzo)
     {
-        lienzo.erase();
+        for (Segment segmento : segmentos) {
+            segmento.borrar(lienzo);
+        }        
+        Segment cabeza = segmentos.get(segmentos.size() - 1);
+        lienzo.eraseCircle(cabeza.getPosicionFinalX() - (TAMANO_CABEZA / 2),
+                          cabeza.getPosicionFinalY() - (TAMANO_CABEZA / 2),
+                          TAMANO_CABEZA);      
     }
-    /**
-     * 
-     */
-    public void addSegmento()
-    {
     
-    }
-    /**
-     * 
+    /*
+     * Adiciona un segmento aleatorio a la serpiente
      */
-    public boolean colisionaConOtrosSegmentos()
+    public boolean addSegment() 
     {
-      boolean siColisiona = false;  
-      
-      return siColisiona;
+        boolean segmentoAdicionado = false;
+        
+        Random aleatorio = new Random();
+        ArrayList<Integer> direcciones = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            direcciones.add(i * DIFERENCIA_DE_GRADOS_ENTRE_DIRECCIONES);
+        }
+        
+        //Calculamos las coordenadas de inicio del segmento: si no había
+        //segmentos, lo ubicamos en una posicion aleatoria; si los había, al final del ultimo
+        //segmento
+        int posicionOrigenX = aleatorio.nextInt(anchoLienzo - (2 * MARGEN_LIENZO)) 
+                              + MARGEN_LIENZO + Segment.LONGITUD_SEGMENTO; 
+        int posicionOrigenY = aleatorio.nextInt(altoLienzo - (2 * MARGEN_LIENZO)) 
+                              + MARGEN_LIENZO + Segment.LONGITUD_SEGMENTO; 
+        if (segmentos.size() != 0) {
+            posicionOrigenX = segmentos.get(segmentos.size() - 1).getPosicionFinalX();
+            posicionOrigenY = segmentos.get(segmentos.size() - 1).getPosicionFinalY();
+        }
+        
+        //Probamos todos los segmentos posibles hasta que demos con uno valido
+        //o hayamos probado los posibles 4 nuevos segmentos
+        Segment posibleNuevoSegmento = null;
+        boolean encontradoNuevoSegmentoValido = false;
+        while (!direcciones.isEmpty() && !encontradoNuevoSegmentoValido) {
+            int direccion = direcciones.remove(aleatorio.nextInt(direcciones.size()));
+            posibleNuevoSegmento = new Segment(posicionOrigenX, posicionOrigenY, direccion, color);
+            encontradoNuevoSegmentoValido = esSegmentoValido(posibleNuevoSegmento);                             
+        }
+        
+        //Si hemos encontrado un segmento valido lo añadimos a la
+        //serpiente; si no, informamos por pantalla
+        if (encontradoNuevoSegmentoValido) {
+            segmentos.add(posibleNuevoSegmento);
+            segmentoAdicionado = true;
+        }
+
+        return segmentoAdicionado;
     }
-    /**
-     * 
+    
+    /*
+     * Indica si un segmento es valido, es decir, si se puede adicionar
+     * a la serpiente sin que colisione con otros segmentos de la serpiente
+     * o con los bordes del lienzo
      */
-    public boolean colisionaConLosBordes()
+    private boolean esSegmentoValido(Segment segmento)
     {
-        boolean siColisiona = false;
+        return (!colisionaConOtrosSegmentos(segmento) && !colisionaConBordes(segmento));        
+    }
+    
+    /*
+     * Indica si el segmento dado colisiona con los bordes del lienzo
+     */
+    public boolean colisionaConBordes(Segment segmento)
+    {
+        boolean colisiona = false;
+        if ((segmento.getPosicionFinalX() >= anchoLienzo - MARGEN_LIENZO) ||
+            (segmento.getPosicionFinalY() >= altoLienzo - MARGEN_LIENZO) ||
+            (segmento.getPosicionFinalX() <= MARGEN_LIENZO) ||
+            (segmento.getPosicionFinalY() <= MARGEN_LIENZO)) {
+                colisiona = true;
+        }
         
+        return colisiona;
+    }
+    
+    /*
+     * Indica si el segmento colisiona con otros segmentos de la serpiente 
+     */
+    public boolean colisionaConOtrosSegmentos(Segment segmento)
+    {
+        boolean colisiona = false;
+        for (Segment segmentoSerpiente : segmentos) {
+            if (segmentoSerpiente.colisiona(segmento)) {
+                colisiona = true;
+            }
+        }
+        return colisiona;
+    }
+    
+    /*
+     * Adiciona un segmento a la serpiente si es posible; en caso contrario 
+     * devuelve false
+     */
+    public boolean mover() 
+    {
+        boolean serpienteMovida = false;
         
-        return siColisiona;
+        segmentos.remove(0);
+        if (addSegment()) {
+            serpienteMovida = true;
+        }
+        
+        return serpienteMovida;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

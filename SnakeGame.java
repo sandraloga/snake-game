@@ -8,15 +8,18 @@
 public class SnakeGame
 {
     // instance variables - replace the example below with your own
-    private int x;
+    private Canvas lienzo;
+    private Snake snake;
+    private static final int ANCHO_LIENZO = 500;
+    private static final int ALTO_LIENZO = 500;
 
     /**
      * Constructor for objects of class SnakeGame
      */
     public SnakeGame()
     {
-        // initialise instance variables
-        x = 0;
+       
+       lienzo = new Canvas("Snake game", ANCHO_LIENZO, ALTO_LIENZO);
     }
 
     /**
@@ -27,6 +30,9 @@ public class SnakeGame
      */
     public void drawSnake()
     {
+        snake = new Snake (ANCHO_LIENZO,ALTO_LIENZO);
+        lienzo.erase();
+        snake.dibujar(lienzo);
         
     }
 }
